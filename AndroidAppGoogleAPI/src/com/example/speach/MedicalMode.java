@@ -38,7 +38,7 @@ public class MedicalMode extends Activity {
             startActivityForResult(intent, 1);
         } catch (ActivityNotFoundException a) {
             Toast t = Toast.makeText(getApplicationContext(),
-                    "Oops! Your device doesn't support Speech to Text",
+                    "Oopps! Your device doesn't support Speech to Text",
                     Toast.LENGTH_SHORT);
             t.show();
         }
