@@ -12,10 +12,12 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 public class MedicalMode extends Activity {
+	private boolean record;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		record = false;
 		setContentView(R.layout.activity_medical_mode);
 	}
 
@@ -31,8 +33,17 @@ public class MedicalMode extends Activity {
         displayText.setText("");
 	}
 	
+	public void stopRecognizer(View view) {
+		record = false;
+	}
+	
 	public void startRecognizer(View view) {
-    	Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+		record = true;
+		startRecognizerHelper();
+    }
+	
+	private void startRecognizerHelper() {
+		Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, "en-US");
         try {
             startActivityForResult(intent, 1);
@@ -42,7 +53,7 @@ public class MedicalMode extends Activity {
                     Toast.LENGTH_SHORT);
             t.show();
         }
-    }
+	}
 	
 	@Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -50,11 +61,12 @@ public class MedicalMode extends Activity {
  
         switch (requestCode) {
         case 1: {
-            if (resultCode == RESULT_OK && null != data) {
+            if (resultCode == RESULT_OK && null != data && record) {
 
                 ArrayList<String> text = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
                 EditText displayText = (EditText) findViewById(R.id.display_message);
                 displayText.append(text.get(0)+"\n");
+                startRecognizerHelper();
             }
             break;
         }
